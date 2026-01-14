@@ -1,9 +1,27 @@
 import spacy
+import subprocess
+import sys
 
-# Load English NLP model
-nlp = spacy.load("en_core_web_sm")
+# =====================================================
+# SAFE spaCy MODEL LOADER (FIXES STREAMLIT CLOUD ERROR)
+# =====================================================
+def load_spacy_model():
+    try:
+        return spacy.load("en_core_web_sm")
+    except OSError:
+        # Auto-download model if missing (Streamlit Cloud safe)
+        subprocess.check_call(
+            [sys.executable, "-m", "spacy", "download", "en_core_web_sm"]
+        )
+        return spacy.load("en_core_web_sm")
 
-# Skill database (can be expanded later)
+# Load NLP model safely
+nlp = load_spacy_model()
+
+
+# =====================================================
+# SKILL DATABASE (Expandable)
+# =====================================================
 SKILLS = [
     "python", "java", "c", "c++", "sql",
     "machine learning", "data science",
@@ -11,8 +29,14 @@ SKILLS = [
     "excel", "power bi", "tableau"
 ]
 
-# --------- Extract skills from RESUME ---------
+
+# =====================================================
+# EXTRACT SKILLS FROM RESUME
+# =====================================================
 def extract_skills(text):
+    if not text:
+        return []
+
     text = text.lower()
     found_skills = []
 
@@ -23,8 +47,13 @@ def extract_skills(text):
     return list(set(found_skills))
 
 
-# --------- Extract skills from JOB DESCRIPTION ---------
+# =====================================================
+# EXTRACT SKILLS FROM JOB DESCRIPTION
+# =====================================================
 def extract_skills_from_job(text):
+    if not text:
+        return []
+
     text = text.lower()
     found_skills = []
 
