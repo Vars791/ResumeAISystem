@@ -1,0 +1,3 @@
+We are looking for a Python developer with knowledge of
+machine learning, data science, SQL, and NLP.
+Experience with Python libraries is required.
