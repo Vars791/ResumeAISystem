@@ -1,34 +1,29 @@
+# skill_extractor.py
 import spacy
-import subprocess
-import sys
 
 # =====================================================
-# SAFE spaCy MODEL LOADER (FIXES STREAMLIT CLOUD ERROR)
+# SAFE spaCy LOADER (STREAMLIT CLOUD COMPATIBLE)
 # =====================================================
-def load_spacy_model():
+def load_nlp():
     try:
+        # Works locally if model is installed
         return spacy.load("en_core_web_sm")
-    except OSError:
-        # Auto-download model if missing (Streamlit Cloud safe)
-        subprocess.check_call(
-            [sys.executable, "-m", "spacy", "download", "en_core_web_sm"]
-        )
-        return spacy.load("en_core_web_sm")
+    except Exception:
+        # Streamlit Cloud fallback (NO downloads)
+        return spacy.blank("en")
 
-# Load NLP model safely
-nlp = load_spacy_model()
-
+nlp = load_nlp()
 
 # =====================================================
-# SKILL DATABASE (Expandable)
+# SKILL DATABASE (Internship-friendly)
 # =====================================================
 SKILLS = [
     "python", "java", "c", "c++", "sql",
     "machine learning", "data science",
     "nlp", "deep learning",
-    "excel", "power bi", "tableau"
+    "excel", "power bi", "tableau",
+    "streamlit", "pandas", "numpy"
 ]
-
 
 # =====================================================
 # EXTRACT SKILLS FROM RESUME
